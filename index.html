@@ -67,28 +67,54 @@ floorG.addColorStop(0,'#1a1712'); floorG.addColorStop(1,'#4a4034');
 
 // ---------- SPRITES ----------
 function mk(draw){ const c=document.createElement('canvas'); c.width=c.height=64; draw(c.getContext('2d')); return c; }
-function robot(g,o){
-  const body = o.hurt ? '#fff' : '#c0392b', dark = o.hurt ? '#ddd' : '#3a3a44';
+// "Big Red": an original cartoon mob boss — fat, red hair + beard, pinstripe suit, bow tie, shades.
+function villain(g,o){
+  const h = o.hurt;
+  const suit=h?'#fff':'#1d1d26', stripe=h?'#ddd':'#3b3b4c', skin=h?'#fff':'#f0c09a',
+        hair=h?'#eee':'#d4471c', beard=h?'#e8e8e8':'#b5381a', gold=h?'#ddd':'#e6b422';
   if(o.dead){
-    g.fillStyle='#5a1a14'; g.fillRect(12,56,40,6);
-    g.fillStyle='#7b241c'; g.fillRect(18,50,26,7);
-    g.fillStyle='#333'; g.fillRect(40,52,10,4);
+    g.fillStyle='#1d1d26'; g.beginPath(); g.ellipse(34,58,22,6,0,0,7); g.fill();
+    g.fillStyle='#d4471c'; g.beginPath(); g.arc(13,57,6,0,7); g.fill();
+    g.fillStyle='#e6b422'; g.fillRect(26,55,12,2);
+    g.fillStyle='#222'; g.fillRect(46,59,12,3);
     return;
   }
-  const s = o.step||0;
-  g.fillStyle=dark; g.fillRect(24,44+(s?2:0),6,18-(s?2:0)); g.fillRect(34,44+(s?0:2),6,18-(s?0:2));
-  g.fillStyle=body; g.fillRect(20,24,24,22);
-  g.fillStyle=o.hurt?'#eee':'#922b21'; g.fillRect(20,40,24,6);
-  g.fillStyle=dark; g.fillRect(23,10,18,15);
-  g.fillStyle=o.aim ? '#ffef3a' : (o.hurt?'#fff':'#3df2ff'); g.fillRect(25,15,14,4);
-  g.fillStyle=dark; g.fillRect(14,26,6,14); g.fillRect(44,28,14,6);
-  g.fillStyle='#111'; g.fillRect(54,29,6,4);
-  if(o.fire){ g.fillStyle='#ffd34d'; g.beginPath(); g.arc(61,31,5,0,7); g.fill(); g.fillStyle='#fff'; g.beginPath(); g.arc(61,31,2.5,0,7); g.fill(); }
+  const s=o.step||0;
+  // legs + shoes
+  g.fillStyle=suit; g.fillRect(22,50+(s?1:0),8,11-(s?1:0)); g.fillRect(34,50+(s?0:1),8,11-(s?0:1));
+  g.fillStyle='#0c0c0c'; g.fillRect(20,60,11,4); g.fillRect(33,60,11,4);
+  // big round belly in a pinstripe suit
+  g.save(); g.beginPath(); g.ellipse(32,39,19,14,0,0,7); g.rect(17,25,30,12); g.clip();
+  g.fillStyle=suit; g.fillRect(12,24,40,32);
+  g.fillStyle=stripe; for(let x=15;x<50;x+=4) g.fillRect(x,24,1,32);
+  g.restore();
+  // shirt, bow tie, gold chain
+  g.fillStyle=h?'#fff':'#f4f4f4'; g.beginPath(); g.moveTo(26,25); g.lineTo(38,25); g.lineTo(32,38); g.fill();
+  g.fillStyle=h?'#ccc':'#7d3cc8';
+  g.beginPath(); g.moveTo(32,28); g.lineTo(27,25); g.lineTo(27,31); g.fill();
+  g.beginPath(); g.moveTo(32,28); g.lineTo(37,25); g.lineTo(37,31); g.fill();
+  g.strokeStyle=gold; g.lineWidth=1.5; g.beginPath(); g.arc(32,30,9,0.25*Math.PI,0.75*Math.PI); g.stroke();
+  // arms: left hangs, right holds the gun
+  g.fillStyle=suit; g.fillRect(9,29,8,17); g.fillStyle=skin; g.fillRect(9,45,8,4);
+  g.fillStyle=suit; g.fillRect(44,31,9,8); g.fillStyle=skin; g.fillRect(51,32,4,6);
+  g.fillStyle='#6b4a2a'; g.fillRect(47,30,5,5);
+  g.fillStyle='#222'; g.fillRect(50,29,13,4); g.fillRect(55,33,4,5);
+  // head, red hair, big beard
+  g.fillStyle=skin; g.beginPath(); g.arc(32,15,9,0,7); g.fill();
+  g.fillStyle=hair; g.beginPath(); g.ellipse(32,9,11,6,0,Math.PI,0); g.fill();
+  g.fillRect(21,8,4,8); g.fillRect(39,8,4,8);
+  g.fillStyle=beard; g.beginPath(); g.ellipse(32,19,11,9,0,0,Math.PI); g.fill(); g.fillRect(21,15,22,5);
+  g.fillStyle='#5a1a10'; g.fillRect(29,21,6,2);
+  // sunglasses — lenses flash yellow when about to fire
+  g.fillStyle='#0a0a0a'; g.fillRect(23,12,18,2); g.fillRect(24,12,7,5); g.fillRect(33,12,7,5);
+  if(o.aim){ g.fillStyle='#ffef3a'; g.fillRect(25,13,5,3); g.fillRect(34,13,5,3); }
+  else if(!h){ g.fillStyle='#9ab'; g.fillRect(25,13,2,1); g.fillRect(34,13,2,1); }
+  if(o.fire){ g.fillStyle='#ffd34d'; g.beginPath(); g.arc(62,31,5,0,7); g.fill(); g.fillStyle='#fff'; g.beginPath(); g.arc(62,31,2.5,0,7); g.fill(); }
 }
 const SPR = {
-  walk0: mk(g=>robot(g,{step:0})), walk1: mk(g=>robot(g,{step:1})),
-  aim: mk(g=>robot(g,{aim:1})), fire: mk(g=>robot(g,{aim:1,fire:1})),
-  hurt: mk(g=>robot(g,{hurt:1})), dead: mk(g=>robot(g,{dead:1})),
+  walk0: mk(g=>villain(g,{step:0})), walk1: mk(g=>villain(g,{step:1})),
+  aim: mk(g=>villain(g,{aim:1})), fire: mk(g=>villain(g,{aim:1,fire:1})),
+  hurt: mk(g=>villain(g,{hurt:1})), dead: mk(g=>villain(g,{dead:1})),
   med: mk(g=>{ g.fillStyle='#eee'; g.fillRect(22,46,20,16); g.fillStyle='#d22'; g.fillRect(29,48,6,12); g.fillRect(25,51,14,6); })
 };
 
@@ -165,7 +191,7 @@ function startGame(){
 
 function spawnWave(){
   wave++; bfs();
-  const n = Math.min(1+wave, 8), hp = 3+Math.floor(wave/3);
+  const n = Math.min(1+wave, 8), hp = 2+Math.floor(wave/4);
   const spots=[];
   for(let y=0;y<MH;y++) for(let x=0;x<MW;x++) if(cell(x,y)===0 && dist[y*MW+x]>=7) spots.push([x,y]);
   for(let i=0;i<n && spots.length;i++){
@@ -177,17 +203,31 @@ function spawnWave(){
 }
 
 // ---------- UPDATE ----------
+// distance to the first wall straight ahead (DDA along the view direction)
+function wallAhead(){
+  const rx=Math.cos(P.a), ry=Math.sin(P.a);
+  let mx=Math.floor(P.x), my=Math.floor(P.y);
+  const ddx=Math.abs(1/rx), ddy=Math.abs(1/ry);
+  let sx, sy, sdx, sdy, side=0;
+  if(rx<0){ sx=-1; sdx=(P.x-mx)*ddx; } else { sx=1; sdx=(mx+1-P.x)*ddx; }
+  if(ry<0){ sy=-1; sdy=(P.y-my)*ddy; } else { sy=1; sdy=(my+1-P.y)*ddy; }
+  for(let i=0;i<64;i++){
+    if(sdx<sdy){ sdx+=ddx; mx+=sx; side=0; } else { sdy+=ddy; my+=sy; side=1; }
+    if(cell(mx,my)) break;
+  }
+  return side===0 ? sdx-ddx : sdy-ddy;
+}
 function shoot(){
-  P.cd=0.28; P.recoil=1; P.flash=0.06; sfx('shot');
+  P.cd=0.2; P.recoil=1; P.flash=0.06; sfx('shot');
   const dX=Math.cos(P.a), dY=Math.sin(P.a), pX=-dY*0.66, pY=dX*0.66, inv=1/(pX*dY-dX*pY);
-  let hit=null, hitTy=1e9;
+  let hit=null, hitTy=1e9; const wall=wallAhead();
   for(const e of enemies){
     if(e.dead) continue;
     const sx=e.x-P.x, sy=e.y-P.y;
     const tx=inv*(dY*sx-dX*sy), ty=inv*(-pY*sx+pX*sy);
     if(ty<0.2) continue;
     const scx=(W/2)*(1+tx/ty), sw=H/ty;
-    if(Math.abs(scx-W/2) < sw*0.2 && ty < zbuf[W>>1]+0.05 && ty<hitTy){ hit=e; hitTy=ty; }
+    if(Math.abs(scx-W/2) < Math.max(sw*0.45, 14) && ty < wall+0.05 && ty<hitTy){ hit=e; hitTy=ty; }
   }
   if(hit){
     hit.hp--; hit.hurt=0.12; hitMark=0.15; hit.aim=0; hit.cd=Math.max(hit.cd,0.4);
@@ -212,6 +252,16 @@ function update(dt){
   if(keys.ArrowRight) P.a+=2.6*dt;
   let mv=0; if(keys.ArrowUp) mv+=1; if(keys.ArrowDown) mv-=0.7;
   if(mv){ const s=3.2*dt*mv; moveEntity(P,Math.cos(P.a)*s,Math.sin(P.a)*s,0.22); P.bob+=dt*10*Math.abs(mv); }
+  // aim assist: when not turning, gently pull the crosshair onto the nearest visible enemy
+  if(!keys.ArrowLeft && !keys.ArrowRight){
+    let bestDa=0.3, pull=0;
+    for(const e of enemies){
+      if(e.dead) continue;
+      let da=Math.atan2(e.y-P.y,e.x-P.x)-P.a; da=Math.atan2(Math.sin(da),Math.cos(da));
+      if(Math.abs(da)<bestDa && los(P,e)){ bestDa=Math.abs(da); pull=da; }
+    }
+    if(pull) P.a+=Math.sign(pull)*Math.min(Math.abs(pull), 3.2*dt);
+  }
   P.cd-=dt; if(keys.Space && P.cd<=0) shoot();
   P.recoil=Math.max(0,P.recoil-dt*6); P.flash-=dt; P.hurt-=dt; hitMark-=dt;
   bfs();
@@ -228,7 +278,7 @@ function update(dt){
       if(e.aim<=0){
         e.flash=0.12; e.cd=Math.max(0.6, 1.4+Math.random()*1.2-wave*0.06); sfx('eshot');
         if(los(e,P)){
-          const chance = Math.max(0.2, 0.8-d*0.05);
+          const chance = Math.max(0.12, 0.55-d*0.05);
           if(Math.random()<chance) hurtPlayer(e, 6+Math.floor(Math.random()*6)+Math.min(wave,6));
         }
       }
@@ -413,8 +463,8 @@ function render(){
   else { ctx.fillStyle='#111'; ctx.fillRect(0,0,DW,DH); }
   if(state==='play'){ drawGun(); drawHUD(); }
   else if(state==='title'){
-    overlay('ARENA', ['Survive endless waves of combat robots.', '↑ ↓  move     ← →  turn     SPACE  shoot',
-      'Yellow visor = about to fire. Grab medkits.', best?('Best: '+best):'', 'Press SPACE to start']);
+    overlay('ARENA', ["Survive endless waves of Big Red's mob.", '↑ ↓  move     ← →  turn     SPACE  shoot',
+      'Shades flash yellow = about to fire. Grab medkits.', best?('Best: '+best):'', 'Press SPACE to start']);
   } else if(state==='over'){
     drawHUD();
     overlay('YOU DIED', ['Score '+score+'   ·   Wave '+wave+'   ·   Kills '+kills, 'Best '+best,

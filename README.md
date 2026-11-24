@@ -2,11 +2,11 @@
 
 # 🔫 ARENA
 
-**A retro first-person shooter that runs in your browser. One file, zero dependencies, endless robot waves.**
+**A retro first-person shooter that runs in your browser. One file, zero dependencies, endless waves of Big Red's mob.**
 
 ### [▶ Play now in your browser](https://iamsaikatbanerjee.github.io/shooter-game/)
 
-![Gameplay: aiming at a robot about to fire, with a medkit nearby](docs/action.png)
+![Gameplay: aiming at a red-bearded mob boss about to fire, with a medkit nearby](docs/action.png)
 
 </div>
 
@@ -14,7 +14,9 @@
 
 ## 🎮 How to play
 
-You're locked in an arena with combat robots. Every wave sends more of them, faster and tougher. Stay alive as long as you can.
+You're locked in an arena with **Big Red's mob**: big, red-bearded bruisers in pinstripe suits and shades. Every wave sends more of them, faster and tougher. Stay alive as long as you can.
+
+**Built to be easy to pick up:** aim assist pulls your crosshair onto any enemy you're roughly facing, so just turn towards them and hold <kbd>Space</kbd>.
 
 | Key | Action |
 |:---:|---|
@@ -27,12 +29,12 @@ That's all of it. No mouse needed.
 
 ### Survival tips
 
-- 🟡 **Watch the visor.** A bot's visor turns **yellow** for a split second before it fires. That's your cue to break line of sight.
-- 🧱 **Use cover.** Bots only shoot what they can see. Pillars and crates block bullets both ways.
+- 🟡 **Watch the shades.** An enemy's sunglasses flash **yellow** for a split second before he fires. That's your cue to break line of sight.
+- 🧱 **Use cover.** Enemies only shoot what they can see. Pillars and crates block bullets both ways.
 - 🔺 **Follow the red arrow.** When you get hit, an arrow on screen points to the shooter.
-- ➕ **Grab medkits.** Destroyed bots sometimes drop one (+25 HP). Clearing a wave also restores +15 HP.
-- 🗺️ **Check the minimap** (top right). Red dots are bots, green dots are medkits.
-- 🎯 **Close range = easier hits** for both sides. Bots lose accuracy at a distance, and so do you if you panic.
+- ➕ **Grab medkits.** Downed enemies sometimes drop one (+25 HP). Clearing a wave also restores +15 HP.
+- 🗺️ **Check the minimap** (top right). Red dots are enemies, green dots are medkits.
+- 🎯 **Hold Space and let the assist work.** Turn roughly towards an enemy and the crosshair snaps onto him. Enemies also lose accuracy at a distance.
 
 ### Scoring
 
@@ -46,7 +48,7 @@ Each kill is worth **100 × the current wave number**, so late waves pay much mo
 |:---:|:---:|
 | ![Title screen](docs/title.png) | ![Wave 5 starting](docs/wave.png) |
 | **Title screen** | **A new wave rolls in** |
-| ![Taking damage at low health](docs/hurt.png) | ![Firing at a robot](docs/action.png) |
+| ![Taking damage at low health](docs/hurt.png) | ![Firing at Big Red](docs/action.png) |
 | **Under fire, low HP** | **Hit confirmed** |
 
 ---
@@ -75,9 +77,9 @@ open index.html        # macOS  (Windows: start index.html, Linux: xdg-open inde
 Everything lives in a single [`index.html`](index.html), written in plain JavaScript with no libraries, build step or assets.
 
 - **Raycasting engine.** The 3D view is drawn column by column with a DDA ray-marcher (the classic 90s technique), with distance fog and per-material wall detail (brick, crates, metal panels).
-- **Billboard sprites.** Robots and medkits are drawn procedurally to small canvases at startup, then depth-sorted and clipped against a per-column z-buffer.
-- **Enemy AI.** Bots chase you using a breadth-first-search flow field across the arena grid. When they can see you, they strafe and keep their spacing, and they telegraph each shot before firing.
-- **Hitscan combat.** Your shots use the same screen projection as the renderer, so what you see under the crosshair is what you hit.
+- **Billboard sprites.** The villain and medkits are drawn procedurally to small canvases at startup, then depth-sorted and clipped against a per-column z-buffer.
+- **Enemy AI.** Enemies chase you using a breadth-first-search flow field across the arena grid. When they can see you, they strafe and keep their spacing, and they telegraph each shot before firing.
+- **Hitscan combat + aim assist.** Your shots use the same screen projection as the renderer, so what you see under the crosshair is what you hit. When you aren't turning, the aim gently rotates towards the nearest visible enemy within about 17° of the crosshair.
 - **Procedural audio.** Gunfire, hits and pickups are synthesized live with the Web Audio API, so there are no sound files.
 - **Low-res, crisp HUD.** The world renders at 400×225 and is upscaled with sharp pixels, while the HUD renders at full resolution.
 
