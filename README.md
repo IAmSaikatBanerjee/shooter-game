@@ -1,12 +1,12 @@
 <div align="center">
 
-# 🔫 ARENA
+# 💥 DHISHOOM!
 
-**A retro first-person shooter that runs in your browser. One file, zero dependencies, endless waves of Big Red's mob.**
+**A comic-book first-person shooter that runs in your browser.<br>One file, zero dependencies, and Big Red's mob is in town.**
 
 ### [▶ Play now in your browser](https://iamsaikatbanerjee.github.io/shooter-game/)
 
-![Gameplay: aiming at a red-bearded mob boss about to fire, with a medkit nearby](docs/action.png)
+![Gameplay: a red-bearded mob boss shouts "Say cheese!" as a DHISHOOM! burst lands](docs/action.png)
 
 </div>
 
@@ -14,31 +14,31 @@
 
 ## 🎮 How to play
 
-You're locked in an arena with **Big Red's mob**: big, red-bearded bruisers in pinstripe suits and shades. Every wave sends more of them, faster and tougher. Stay alive as long as you can.
+You're trapped in a yard full of crates and brick walls with **Big Red's mob**: big, red-bearded goons in pinstripe suits and shades. Each **chapter** sends more of them, faster and tougher. Survive as many chapters as you can.
 
-**Built to be easy to pick up:** aim assist pulls your crosshair onto any enemy you're roughly facing, so just turn towards them and hold <kbd>Space</kbd>.
+**Easy to pick up:** aim assist pulls your crosshair onto any goon you're roughly facing, so just turn towards them and hold <kbd>Space</kbd>.
 
 | Key | Action |
 |:---:|---|
 | <kbd>↑</kbd> | Move forward |
 | <kbd>↓</kbd> | Move backward |
 | <kbd>←</kbd> <kbd>→</kbd> | Turn left / right |
-| <kbd>Space</kbd> | **Shoot** (also starts and restarts the game) |
+| <kbd>Space</kbd> | **Shoot** (also starts the game and the sequel) |
 
 That's all of it. No mouse needed.
 
 ### Survival tips
 
-- 🟡 **Watch the shades.** An enemy's sunglasses flash **yellow** for a split second before he fires. That's your cue to break line of sight.
-- 🧱 **Use cover.** Enemies only shoot what they can see. Pillars and crates block bullets both ways.
-- 🔺 **Follow the red arrow.** When you get hit, an arrow on screen points to the shooter.
-- ➕ **Grab medkits.** Downed enemies sometimes drop one (+25 HP). Clearing a wave also restores +15 HP.
-- 🗺️ **Check the minimap** (top right). Red dots are enemies, green dots are medkits.
-- 🎯 **Hold Space and let the assist work.** Turn roughly towards an enemy and the crosshair snaps onto him. Enemies also lose accuracy at a distance.
+- 💬 **Read the speech balloons.** A goon about to fire shouts at you (*"Say cheese!"*, *"Too slow, hero!"*) and his **shades flash yellow**. Get out of his line of sight.
+- 🧱 **Use cover.** Goons only shoot what they can see. Crates and walls block bullets both ways.
+- 🔺 **Follow the red arrow.** When you get hit, an arrow points to the shooter.
+- ➕ **Grab medkits.** Knocked-out goons sometimes drop one (+25 power). Finishing a chapter restores +15.
+- 🗺️ **Check the map** (top right). Red dots are goons, teal squares are medkits.
+- 🎯 **Hold Space and let the assist work.** Goons also miss more often from far away.
 
 ### Scoring
 
-Each kill is worth **100 × the current wave number**, so late waves pay much more. Your best score is saved in your browser.
+Each knockout is worth **100 × the chapter number**, so later chapters pay much more. Your best score is saved in your browser.
 
 ---
 
@@ -46,10 +46,21 @@ Each kill is worth **100 × the current wave number**, so late waves pay much mo
 
 | | |
 |:---:|:---:|
-| ![Title screen](docs/title.png) | ![Wave 5 starting](docs/wave.png) |
-| **Title screen** | **A new wave rolls in** |
-| ![Taking damage at low health](docs/hurt.png) | ![Firing at Big Red](docs/action.png) |
-| **Under fire, low HP** | **Hit confirmed** |
+| ![Comic-cover title screen](docs/title.png) | ![Chapter 5 begins](docs/wave.png) |
+| **The cover** | **A new chapter begins** |
+| ![Under fire with low power](docs/hurt.png) | ![Game over: The End...?](docs/gameover.png) |
+| **Under fire, power running low** | **The End...? Press Space for the sequel** |
+
+---
+
+## 🎨 The look
+
+The whole game is styled like a page from a classic newsprint comic:
+
+- **Ink and flat colour:** every wall, goon and medkit has a black ink outline, with flat terracotta, mustard and teal "printed" colours that fade into the paper with distance.
+- **Halftone everywhere:** a newsprint dot screen covers the scene, the floor uses dots that grow towards the bottom, and the sky is a comic sunburst.
+- **Sound effects you can read:** hits pop up as *THAK!*, *DHAM!* and *POW!*, and knockouts as a big **DHISHOOM!** burst.
+- **Comic-panel HUD:** a yellow caption box for the chapter, a POWER meter, a score panel and an outlined panel frame around the whole screen.
 
 ---
 
@@ -68,20 +79,20 @@ cd shooter-game
 open index.html        # macOS  (Windows: start index.html, Linux: xdg-open index.html)
 ```
 
-> 💡 Click the game once if the keys don't respond, so the page has keyboard focus. Needs a keyboard, so it won't play on phones.
+> 💡 Click the game once if the keys don't respond, so the page has keyboard focus. It needs a keyboard, so it won't play on phones. Offline, the comic font falls back to Impact, and everything else works the same.
 
 ---
 
 ## ⚙️ How it's built
 
-Everything lives in a single [`index.html`](index.html), written in plain JavaScript with no libraries, build step or assets.
+Everything lives in a single [`index.html`](index.html), written in plain JavaScript with no libraries, build step or image files.
 
-- **Raycasting engine.** The 3D view is drawn column by column with a DDA ray-marcher (the classic 90s technique), with distance fog and per-material wall detail (brick, crates, metal panels).
-- **Billboard sprites.** The villain and medkits are drawn procedurally to small canvases at startup, then depth-sorted and clipped against a per-column z-buffer.
-- **Enemy AI.** Enemies chase you using a breadth-first-search flow field across the arena grid. When they can see you, they strafe and keep their spacing, and they telegraph each shot before firing.
-- **Hitscan combat + aim assist.** Your shots use the same screen projection as the renderer, so what you see under the crosshair is what you hit. When you aren't turning, the aim gently rotates towards the nearest visible enemy within about 17° of the crosshair.
-- **Procedural audio.** Gunfire, hits and pickups are synthesized live with the Web Audio API, so there are no sound files.
-- **Low-res, crisp HUD.** The world renders at 400×225 and is upscaled with sharp pixels, while the HUD renders at full resolution.
+- **Raycasting engine:** the 3D view is drawn one screen column at a time with a DDA ray-marcher (the classic 90s technique), then given flat comic shading and ink lines for each wall material.
+- **Inked billboard sprites:** Big Red and the medkits are drawn in code to small canvases at startup. An automatic pass then traces a black outline around each one, and the sprites are depth-sorted and clipped against a per-column z-buffer.
+- **Enemy AI:** goons find their way to you with a breadth-first-search flow field over the map grid. Once they can see you, they strafe, keep their distance from each other and warn you before every shot.
+- **Hitscan combat and aim assist:** a shot uses the same screen maths as the renderer, so whatever is under the crosshair is what you hit. When you aren't turning, the aim gently swings towards the nearest visible goon within about 17° of the crosshair.
+- **Comic effects layer:** sound-effect bursts, speech balloons (placed from each goon's on-screen position) and HUD panels are drawn as vector shapes at full resolution, over a low-res, crisp-pixel world.
+- **Procedural audio:** gunfire, hits and pickups are synthesized live with the Web Audio API, so there are no sound files.
 
 ---
 
